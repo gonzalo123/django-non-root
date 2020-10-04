@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  nginx:
+    image: nginx-ci_demo:latest
+    build:
+      context: .docker/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - static_volume:/src/staticfiles
+    ports:
+      - 8000:8000
+    depends_on:
+      - wsgi
+  wsgi:
+    image: ci_demo:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /bin/bash ./docker-entrypoint-wsgi.sh
+    volumes:
+      - static_volume:/src/staticfiles
+volumes:
+  static_volume:
+
